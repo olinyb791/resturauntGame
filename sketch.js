@@ -1,65 +1,43 @@
+let hamburger = 1;
+let spaceDown = false;
+let score = 0;
 
-let canPickUp = false;
-let holding = [];
-let kitchenX = 100;
-let kitchenY = 100;
-let deliveryX = 500;
-let deliveryY = 500;
+let kitchen = {
+	x: 100,
+	y: 100,
+	side: 50,
+};
 
-class Player{
-  constructor(x,y,d){
-    this.x = x;
-    this.y = y;
-    this.d = d;
-  }
+let delivery = {
+	x: 500,
+	y: 500,
+	side: 50,
+};
 
-  render(){
-    fill(255);
-    circle(this.x, this.y, this.d);
-  }
-
-  move(){
-    if(keyIsDown(87)){
-      this.y = this.y-5;
-    }
-    if(keyIsDown(83)){
-      this.y = this.y+5;
-    }
-    if(keyIsDown(68)){
-      this.x = this.x+5;
-    }
-    if(keyIsDown(65)){
-      this.x = this.x-5;
-    }
-  }
-
-  pickUpFood(){
-    if(this.x + 10 >= kitchenX - 25 && this.x - 10 <= kitchenX + 25){
-    canPickUp = true;
-    }else{
-      canPickUp = false;
-    }
-  }
-
-}
-
-
-let Chef1 = new Player(100,100,20);
+let chef1 = new Player(100, 100, 20, 87, 83, 68, 65, 32);
+// let chef2 = new Player(100, 100, 20, 38, 40, 39, 37, 13);
+// Skulle bara testa multiplayer
 
 function setup() {
-  createCanvas(600,600);
-  rectMode(CENTER);
-
+	createCanvas(600, 600);
+	rectMode(CENTER);
 }
 
 function draw() {
-  background(220);
-  fill(160,80,20);
-  square(kitchenX, kitchenY, 50);
-  fill(100,200,60);
-  square(deliveryX, deliveryY, 50);
-  Chef1.render();
-  Chef1.move();
-  Chef1.pickUpFood();
+	background(220);
+	fill(0);
+	text("$" + score, width / 2, 15);
+	fill(160, 80, 20);
+	square(kitchen.x, kitchen.y, kitchen.side);
+	fill(100, 200, 60);
+	square(delivery.x, delivery.y, delivery.side);
+	chef1.render();
+	chef1.move();
+	chef1.handleFood();
 
+	// chef2.render();
+	// chef2.move();
+	// chef2.handleFood();
 }
+
+// Johans spel variant https://editor.p5js.org/johan.kellen/sketches/oRAjLDW8a
