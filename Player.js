@@ -1,16 +1,16 @@
 class Player {
-	constructor(x, y, s, front, back, right, left, grab) {
+	constructor(x, y, s, front, back, right, left, grab, stand) {
 		this.x = x;
 		this.y = y;
 		this.s = s;
 		this.canPickUp = true;
 		this.holding = [];
-		this.looking = {
-			x: 20,
-			y: 0,
-			angle: 0,
-			s: 20,
-		};
+    this.looking = {
+      x:1,
+      y:0,
+      s:15
+    };
+    this.canMove = true;
 
 		//Dessa variabler är keybinds så att man kan spela med flera personer
 		this.front = front;
@@ -18,21 +18,21 @@ class Player {
 		this.right = right;
 		this.left = left;
 		this.grab = grab;
+    this.stand = stand;
 	}
 
 	render() {
+    rectMode(CENTER);
 		fill(90, 30, 180);
 		square(this.x, this.y, this.s);
-		push();
-		fill(220);
-		translate(this.x, this.y);
-		rotate(this.looking.angle);
-		square(this.looking.x, this.looking.y, this.looking.s - 5);
-		if (!this.canPickUp) {
+    fill(220);
+		square(this.x + 20*this.looking.x, this.y + 20*this.looking.y, this.looking.s);
+    
+    if (!this.canPickUp) {
 			fill(255, 255, 0);
-			square(this.looking.x, this.looking.y, 10);
-		}
-    pop();
+			square(this.x + 20*this.looking.x, this.y + 20*this.looking.y, 10);
+    }
+
 
     //Behöver fråga Johan hur man vet vart this.looking kvadraten befinner sig
     //utan att behöva använda translate över hela koden
@@ -48,28 +48,59 @@ class Player {
     //   this.holding.splice(0);
     //   console.log("Du lade ner maten på ett skåp");
     //   this.canPickUp = true;
-
-    // }
+    
 			
 	}
 
 	move() {
 		// KeyCodes för javascript https://www.toptal.com/developers/keycode
+    if(keyIsDown(this.stand)){
+      this.canMove = false;
+    } else {
+      this.canMove = true;
+    }
 		if (keyIsDown(this.front)) {
-			this.y = this.y - 5;
-			this.looking.angle = 270;
+			if(this.canMove == true){
+        this.y = this.y - 5;
+      }
+      this.looking.x = 0;
+      this.looking.y = -1;
+			
 		}
 		if (keyIsDown(this.back)) {
-			this.y = this.y + 5;
-			this.looking.angle = 90;
+      if(this.canMove == true){
+        this.y = this.y + 5;
+      }
+			
+      this.looking.x = 0;
+      this.looking.y = 1;
+			
 		}
 		if (keyIsDown(this.right)) {
-			this.x = this.x + 5;
-			this.looking.angle = 0;
+      if(this.canMove == true){
+        this.x = this.x + 5;
+      }
+      this.looking.x = 1;
+      this.looking.y = 0;
+      if(keyIsDown(this.back)) {
+      this.looking.y = 1;
+      }
+      if(keyIsDown(this.front)){
+        this.looking.y = -1;
+      }
 		}
 		if (keyIsDown(this.left)) {
-			this.x = this.x - 5;
-			this.looking.angle = 180;
+			if(this.canMove == true){
+        this.x = this.x - 5;
+      }
+			this.looking.x = -1;
+      this.looking.y = 0;
+      if (keyIsDown(this.back)) {
+        this.looking.y = 1;
+      }
+      if(keyIsDown(this.front)){
+        this.looking.y = -1;
+      }
 		}
 	}
 
@@ -79,15 +110,26 @@ class Player {
 		this.canPickUp = false;
 	}
 
+
 	handleFood() {
 		if (keyIsDown(this.grab) && !spaceDown) {
 			this.spaceDown = true;
+      console.log("Den här ska vara större ",this.x + 20*this.looking.x - this.looking.s/2, "Den här ska vara mindre ", kitchen.x - kitchen.side / 2 )
 			// REMINDER: Försöka lägga objekten getFood och deliverFood här och lägg in hitbox if-satserna i respektive kitchen och delivery
-			if (
-				this.x + 10 >= kitchen.x - kitchen.side / 2 &&
-				this.x - 10 <= kitchen.x + kitchen.side / 2 &&
-				this.y + 10 >= kitchen.y - kitchen.side / 2 &&
-				this.y - 10 <= kitchen.y + kitchen.side / 2
+      // square(this.x + 20*this.looking.x + this.looking.s/3, this.y + 20*this.looking.y + this.looking.s/3,20)
+
+      square(this.x + 20*this.looking.x, this.y + 20*this.looking.y, this.looking.s + 5);
+      if (
+
+        this.x + 20*this.looking.x + this.looking.s/2 >= kitchen.x - kitchen.side/2 &&
+        this.x + 20*this.looking.x - this.looking.s/2 <= kitchen.x + kitchen.side/2 &&
+        this.y + 20*this.looking.y + this.looking.s/2 >= kitchen.y - kitchen.side/2 &&
+        this.y + 20*this.looking.y - this.looking.s/2 <= kitchen.y + kitchen.side/2
+
+				// this.x + 20*this.looking.x + this.looking.s/3 >= kitchen.x - kitchen.side / 2 &&
+				// this.x + 20*this.looking.x - this.looking.s/3 <= kitchen.x + kitchen.side / 2 &&
+				// this.y + 20*this.looking.x + this.looking.s/3 >= kitchen.y - kitchen.side / 2 &&
+				// this.y + 20*this.looking.y - this.looking.s/3 <= kitchen.y + kitchen.side / 2
 			) {
 				if (this.canPickUp == true) {
 					this.getFood();
@@ -118,3 +160,4 @@ class Player {
 		}
 	}
 }
+

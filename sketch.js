@@ -3,6 +3,7 @@ let spaceDown = false;
 let score = 0;
 
 
+
 let kitchen = {
 	x: 100,
 	y: 100,
@@ -22,14 +23,17 @@ let delivery = {
 };
 
 // de fem sista värdena är keybinds så att man kunde spela med två spelare
-let chef1 = new Player(100, 100, 20, 87, 83, 68, 65, 32);
-// let chef2 = new Player(100, 100, 20, 38, 40, 39, 37, 13);
+let chef1 = new Player(100, 100, 20, 87, 83, 68, 65, 32, 16);
+// let chef2 = new Player(100, 100, 20, 38, 40, 39, 37, 13, 46);
 // Skulle bara testa multiplayer
 
 function setup() {
 	createCanvas(600, 600);
 	rectMode(CENTER);
 	angleMode(DEGREES);
+	// let video = createVideo("videos/OE_hEvCQ9_ZA0b1GgGHPig.mp4");
+	// video.loop();
+	// video.speed(1);
 }
 
 function draw() {
